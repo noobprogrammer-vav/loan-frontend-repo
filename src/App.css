@@ -1,0 +1,41 @@
+.footer{
+background-color: #083135;
+padding: 4%;
+color: white;
+}
+
+.text-reset{
+  text-decoration: none;
+
+}
+
+/* ==========login========== */
+.login{
+  background-color: #F3F3ED;
+}
+.formcard{
+  background-color: white;
+padding: 4%;
+}
+.nav-link{
+  color: white;
+}
+.visit:hover{
+  color: green;
+  background-color: white;
+}
+.typecard{
+  height: fit-content;
+  width: fit-content;
+  background-color: white;
+  /* background-image: linear-gradient(to right,#E6EDEB, #FFF8EE); */
+  padding: 3%;
+}
+.cardcontainer{
+  background-image: linear-gradient(to right,#E6EDEB, #FFF8EE);
+  padding: 5%;
+}
+.customerform{
+  padding: 3%;
+  background-color: #F2F6F5;
+}
