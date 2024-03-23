@@ -13,6 +13,8 @@ const AdminLoanTypes = () => {
   const[description,setDescription]=useState();
   const[tabler,setTabler]=useState();
 
+  const [tc, setTc] = useState()
+
   useEffect(() => {
     axios.get("http://192.168.29.108:3001/get_loan_types").then((response) => {
       if(response.data.length > 0)
@@ -29,6 +31,11 @@ const AdminLoanTypes = () => {
         </tr>))
       }
     })
+
+    axios.get("http://192.168.29.108:3001/get_tc").then((response) => {
+      setTc(response.data.map((data,index) => <option value={data.id}>{data.id}</option>))
+    })
+
   },[])
 
   function submitter(e){
@@ -37,6 +44,7 @@ const AdminLoanTypes = () => {
     const formData = new FormData()
     formData.append("name", e.target.name.value)
     formData.append("gist", e.target.gist.value)
+    formData.append("tc_id", e.target.tc.value)
     formData.append("summary", summary)
     formData.append("description", description)
     formData.append("file", e.target.image.files[0])
@@ -53,6 +61,8 @@ const AdminLoanTypes = () => {
       <input required className='form-control' name='name' placeholder='Enter the Name of Loan'></input><br></br>
       <label>Gist</label>
       <input required className='form-control' name='gist' placeholder='Enter the Gist'></input><br></br>
+      <label>Terms and Conditions</label>
+      <select className='form-control' name='tc'>{tc}</select>
       <label>Summary</label>
       <ReactQuill theme='snow' onChange={setSummary}/>
       <label>Description</label>

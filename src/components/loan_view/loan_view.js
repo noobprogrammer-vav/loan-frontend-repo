@@ -35,7 +35,7 @@ const LoanView = () => {
     <img id='image' src={image} />
     <p id='summary' />
     <p id='description' />
-    <button onClick={() => {navigate("/customer_form",{state:nav_data})}} className='btn btn-sm btn-primary'>Apply</button>
+    <button onClick={() => {navigate("/customerform",{state:nav_data})}} className='btn btn-sm btn-primary'>Apply</button>
     </div>
   </div>
 );

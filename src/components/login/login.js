@@ -4,12 +4,15 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import login from '../../components/loans_img/login.png';
 import Footer from '../footer/footer';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Login = () => {
 
   const[userIp,setUserIp]=useState();
+
+  const navigate = useNavigate()
 
   function submitter(e)
   {
@@ -19,11 +22,12 @@ const Login = () => {
       password:e.target.password.value,
       ip:userIp
     }
-    console.log(formData)
+    // console.log(formData)
     axios.post("http://192.168.29.108:3001/login",formData).then((response) => {
       if(response.data.length > 0)
       {
         sessionStorage.setItem("token",response.data)
+        navigate("/")
       }
       else{
         toast.warning("Incorrect Credentials",{position:"top-center"})
