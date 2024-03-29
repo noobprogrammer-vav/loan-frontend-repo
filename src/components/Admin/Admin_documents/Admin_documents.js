@@ -14,22 +14,24 @@ const AdminDocuments = () => {
       name:e.target.document_name.value,
     }
     console.log(formData)
-    axios.post("http://192.168.29.108:3001/add_doc_type",formData).then((response) => {
+    axios.post(`${sessionStorage.getItem("urls")}/add_doc_type`,formData).then((response) => {
       toast.success("Added")
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   }
   useEffect(()=>{
-    axios.get("http://192.168.29.108:3001/get_doc_type").then((response)=>{
+    axios.get(`${sessionStorage.getItem("urls")}/get_doc_type`).then((response)=>{
       if(response.data.length>0){
         setTabler(response.data.map((data,index)=><tr>
           <td>{index+1}</td>
           <td>{data.document_name}</td>
-          <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`http://192.168.29.108:3001/activate_doc_type/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
+          <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_doc_type/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
 
         </tr>))
 
       }
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   },[])
   return(<div>
     <AdminHeader title="Document Type" />

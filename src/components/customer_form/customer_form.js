@@ -4,6 +4,8 @@ import customerform from '../loans_img/customer_form_inPixio.png';
 import Footer from '../footer/footer';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Header from '../header/header';
+import { toast } from 'react-toastify';
 
 const CustomerForm = () => {
 
@@ -27,23 +29,26 @@ const CustomerForm = () => {
   useEffect(() => {
     if(sessionStorage.getItem("token") != null)
     {
-      axios.get("http://192.168.29.108:3001/active_income").then((response) => {
+      axios.get(`${sessionStorage.getItem("urls")}/active_income`).then((response) => {
         if(response.data.length > 0)
         {
           setIncomes(response.data.map((data,index) => <option value={data.id}>{data.max_income.charAt(data.max_income.length - 1) == 1 ? `more than ${parseInt(data.max_income) - 1}` : `${index == 0 ? '0' : response.data[index -1].max_income} - ${data.max_income}`}</option>))
         }
-      })
+      }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+      console.log(err)})
   
-      axios.get("http://192.168.29.108:3001/get_occupation").then((response) => {
+      axios.get(`${sessionStorage.getItem("urls")}/get_occupation`).then((response) => {
         setOccupations(response.data.map((data,index) => <option value={data.id}>{data.occupation_name}</option>))
-      })
+      }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+      console.log(err)})
   
-      axios.post("http://192.168.29.108:3001/get_specific_customer_info",{token : sessionStorage.getItem("token")}).then((response) => {
+      axios.post(`${sessionStorage.getItem("urls")}/get_specific_customer_info`,{token : sessionStorage.getItem("token")}).then((response) => {
         if(response.data.length != 0)
         {
           navigate("/application",{state:nav_data})
         }
-      })
+      }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+      console.log(err)})
     }
     else{
       navigate("/login")
@@ -71,13 +76,15 @@ const CustomerForm = () => {
     formData.append("pan_doc",e.target.pan_doc.files[0])
     formData.append("emi",e.target.emi.value)
 
-    axios.post("http://192.168.29.108:3001/add_customer_info",formData).then((response) => {
+    axios.post(`${sessionStorage.getItem("urls")}/add_customer_info`,formData).then((response) => {
       navigate("/application",{state:nav_data})
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
 
   }
 
   return(<div>
+    <Header />
     <h2 className='text-center'>Welecome!</h2><br></br>
     <h4 className='text-center'>Fill Your Details here.</h4>
     <div className='conatiner ' style={{marginTop:'5%'}}>
@@ -127,7 +134,7 @@ const CustomerForm = () => {
                   </div>
                   <div className='col-sm-6'>
                     <label>Aadhar Number</label>
-                    <input className='form-control rounded rounded-5' name='aadhar_no' type='number' placeholder='Aadhar number'></input><br />
+                    <input onChange={(e) => e.target.value.length > 12 ? document.getElementById("aadhar_no").value = e.target.value.slice(0,12) : ''} id='aadhar_no' className='form-control rounded rounded-5' name='aadhar_no' type='number' placeholder='Aadhar number'></input><br />
                   </div>
                   <div className='col-sm-6'>
                     <label>Aadhar Document</label>
@@ -135,15 +142,15 @@ const CustomerForm = () => {
                   </div>
                   <div className='col-sm-6'>
                     <label>PAN Number</label>
-                    <input className='form-control rounded rounded-5' name='pan_no' type='number' placeholder='PAN number'></input><br />
+                    <input onChange={(e) => e.target.value.length > 10 ? document.getElementById("pan_no").value = e.target.value.slice(0,10) : ''} className='form-control rounded rounded-5' id='pan_no' name='pan_no' type='text' placeholder='PAN number'></input><br />
                   </div>
                   <div className='col-sm-6'>
                     <label>PAN Document</label>
                     <input className='form-control rounded rounded-5' name='pan_doc' type='file'></input><br />
                   </div>
                   <div className='col-sm-6'>
-                    <label>EMI Number</label>
-                    <input className='form-control rounded rounded-5' name='emi' type='number'></input><br />
+                    <label>EMI Amount</label>
+                    <input placeholder='Total Yearly EMI amount' className='form-control rounded rounded-5' name='emi' type='number'></input><br />
                   </div>
               <button className='btn btn-success' style={{height:'fit-content',width:'fit-content',marginLeft:'45%'}} type='submit'>Submit</button>
                 
@@ -156,7 +163,6 @@ const CustomerForm = () => {
         </div>
       </div>
     </div>
-<Footer/>
   </div>
 );
 }

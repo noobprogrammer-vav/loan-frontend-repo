@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import AdminHeader from '../Admin_header/Admin_header';
 import ReactQuill from 'react-quill';
@@ -13,10 +13,14 @@ const AdminLoanTypes = () => {
   const[description,setDescription]=useState();
   const[tabler,setTabler]=useState();
 
+  const [reloader,setReloader] = useState(true)
+
   const [tc, setTc] = useState()
 
+  const resetbtn = useRef(null)
+
   useEffect(() => {
-    axios.get("http://192.168.29.108:3001/get_loan_types").then((response) => {
+    axios.get(`${sessionStorage.getItem("urls")}/get_loan_types`).then((response) => {
       if(response.data.length > 0)
       {
         setTabler(response.data.map((data,index) => <tr>
@@ -24,19 +28,21 @@ const AdminLoanTypes = () => {
           <td>{data.loan_name}</td>
           <td>{data.gist}</td>
           <td dangerouslySetInnerHTML={{__html : data.summary}}></td>
-          <td><img src={`http://192.168.29.108:3001/uploads/${data.image}`} /></td>
+          <td><img src={`${sessionStorage.getItem("urls")}/uploads/${data.image}`} style={{width:"100%"}} /></td>
           <td><i className='fa fa-eye btn btn-sm btn-outline-warning' /></td>
-          <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`http://192.168.29.108:3001/activate_loan_types/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
+          <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_loan_types/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
 
         </tr>))
       }
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
 
-    axios.get("http://192.168.29.108:3001/get_tc").then((response) => {
+    axios.get(`${sessionStorage.getItem("urls")}/get_tc`).then((response) => {
       setTc(response.data.map((data,index) => <option value={data.id}>{data.id}</option>))
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
 
-  },[])
+  },[reloader])
 
   function submitter(e){
 
@@ -44,14 +50,19 @@ const AdminLoanTypes = () => {
     const formData = new FormData()
     formData.append("name", e.target.name.value)
     formData.append("gist", e.target.gist.value)
+    formData.append("rate", e.target.rate.value)
     formData.append("tc_id", e.target.tc.value)
     formData.append("summary", summary)
     formData.append("description", description)
     formData.append("file", e.target.image.files[0])
     console.log(e.target.image.files[0])
 
-    axios.post("http://192.168.29.108:3001/add_loan_types",formData).then((response) => {
-    })
+    axios.post(`${sessionStorage.getItem("urls")}/add_loan_types`,formData).then((response) => {
+      setReloader(!reloader)
+      toast.success("Added",{position:"top-center"})
+      resetbtn.current.click()
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   }
 
   return(<div className=''>
@@ -59,6 +70,8 @@ const AdminLoanTypes = () => {
     <form className='container' onSubmit={(e) => submitter(e)} >
       <label>Name</label>
       <input required className='form-control' name='name' placeholder='Enter the Name of Loan'></input><br></br>
+      <label>Intereset Rate</label>
+      <input required className='form-control' type='number' name='rate' placeholder='Enter the rate'></input><br></br>
       <label>Gist</label>
       <input required className='form-control' name='gist' placeholder='Enter the Gist'></input><br></br>
       <label>Terms and Conditions</label>
@@ -69,7 +82,7 @@ const AdminLoanTypes = () => {
       <ReactQuill theme='snow' onChange={setDescription}/>
       <label>Image</label>
       <input required type='file' name='image' placeholder='image' className='form-control'></input><br></br>
-      <button className='btn btn-outline-success ' type='submit'>Submit</button>
+      <button className='btn btn-outline-success ' type='submit'>Submit</button><button style={{display:"none"}} type='reset' ref={resetbtn} />
     </form>
     <table className='table'>
       <thead>

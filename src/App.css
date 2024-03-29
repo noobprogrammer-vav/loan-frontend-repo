@@ -39,3 +39,22 @@ padding: 4%;
   padding: 3%;
   background-color: #F2F6F5;
 }
+
+
+.contact{
+  background-color: #E6EDEB;
+  padding: 3%;
+}
+.containerform{
+  background-color: white;
+  padding: 3%;
+  height: fit-content;
+  margin-top: 5%;
+}
+.help{
+  background-color: white;
+  padding: 2%;
+}
+.card{
+  background-color: #E6EDEB;
+}

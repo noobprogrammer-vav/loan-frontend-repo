@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import login from '../../components/loans_img/login.png';
 import Footer from '../footer/footer';
 import { useNavigate } from 'react-router-dom';
+import Header from '../header/header';
 
 
 const Signup = () => {
@@ -23,21 +24,40 @@ const Signup = () => {
       email : e.target.email.value,
       mobile : e.target.mobile.value,
       gender : e.target.gender.value,
-      occupation : e.target.occupation.value.length == 0 ? null : e.target.occupation.value,
-      occupation_id : e.target.occupation_id.value,
       password : e.target.password.value,
       ip : userIp
     }
-    axios.post("http://192.168.29.108:3001/signup",formData).then((response) => {
-       if(response.data == 1062)
-       {
-        alert("Email or mobile already exists")
-        toast.error("Email or mobile already exists",{position:"top-center"})
-       }
-       else{
-        navigate("/login")  
-       }
-    })
+
+    console.log(formData.password.length)
+    if(formData.mobile.length == 10)
+    {
+      if(formData.password.length > 8)
+      {
+        if(formData.gender != 0)
+        {
+          axios.post(`${sessionStorage.getItem("urls")}/signup`,formData).then((response) => {
+            if(response.data == 1062)
+            {
+             alert("Email or mobile already exists")
+             toast.error("Email or mobile already exists",{position:"top-center"})
+            }
+            else{
+             navigate("/login")  
+            }
+         }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+         console.log(err)})
+        }
+        else{
+          toast.warning("Add Gender")
+        }
+      }
+      else{
+        toast.warning("Password must be of length greater than 8")
+      }
+    }
+    else{
+      toast.warning("Enter Valid mobile")
+    }
     // console.log(formData)
   }
 
@@ -45,26 +65,14 @@ const Signup = () => {
     axios.get("https://geolocation-db.com/json/").then((response) => setUserIp(response.data.IPv4)).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
     console.log(err)})
 
-    axios.get("http://192.168.29.108:3001/get_occupation").then((response) => {
-      setOccupation(response.data.map((data,index) => <option value={data.id}>{data.occupation_name}</option>))
-    })
-
   },[])
 
-  function occupationSet(e)
-  {
-    if (e == 1)
-    {
-      document.getElementById("occu").style.display = "block"
-    }
-    else{
-      document.getElementById("occu").style.display = "none"
-    }
-  }
 
 
   return(<div>
     <div className='login'>
+  <Header />
+
   <div className='container'>
     <div className='row'>
       <div className='col-sm-6'>
@@ -80,11 +88,11 @@ const Signup = () => {
                   </div>
                   <div className='col-sm-6'>
                     <label><b>Enter Your Mobile </b></label>
-                    <input required name='mobile' type="text" placeholder='Enter your Mobile...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
+                    <input onChange={(e) => e.target.value.length > 10 ? document.getElementById("mobile").value = e.target.value.slice(0,10) : ''} required name='mobile' id='mobile' type="number" placeholder='Enter your Mobile...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                   </div>
                   <div className='col-sm-6'>
                     <label><b>Enter Your Email-Id </b></label>
-                    <input required name='email' type="text" placeholder='Enter your Email...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
+                    <input required name='email' type="email" placeholder='Enter your Email...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                   </div>
                   <div className='col-sm-6'>
                     <label><b>Select Your Gender </b></label>
@@ -95,21 +103,12 @@ const Signup = () => {
                       <option>Prefer not to say</option>
                     </select>
                   </div>
-                  <div className='col-sm-6'>
-                    <label><b>Enter Your Occupation </b></label>
-                    <select onChange={(e) => occupationSet(e.target.value)} defaultValue={0} required name="occupation_id" className='form-control rounded rounded-5'>
-                      <option disabled value={0}>-- --</option>
-                      {occupation}
-                    </select>
-                    <br />
-                    <input style={{display:"none"}} id='occu' placeholder='Enter your Occupation' className='form-control rounded rounded-5' name='occupation' /><br />
-                  </div>
-                  <div className='col-sm-6'>
+                  <div className='col-sm-12'>
                     <label><b>Enter Your Password </b></label>
                     <input required name='password' type="password" placeholder='Password' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                   </div>
                 </div>
-                <p>Do you have an account? <b>Signup</b></p><br></br>
+                <p>Already Have an Account? <b onClick={() => navigate("/login")}>Log in</b></p><br></br>
                 <button type='submit' className='btn btn-outline-success rounded rounded-5'>Sign Up</button>
                 </form>
               </div>
@@ -122,7 +121,6 @@ const Signup = () => {
   </div>
 
   </div>
-  <Footer/>
   </div>
 );
   }

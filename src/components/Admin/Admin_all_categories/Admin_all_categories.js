@@ -12,19 +12,21 @@ const AdminAllCategories = () => {
   function submitter(e)
   {
     e.preventDefault()
-    axios.post(`http://192.168.29.108:3001/add_occupation`,{name : e.target.category.value}).then((response) => {
+    axios.post(`${sessionStorage.getItem("urls")}/add_occupation`,{name : e.target.category.value}).then((response) => {
       toast.success("Success",{position:"top-center"})
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   }
 
   useEffect(() => {
-    axios.get(`http://192.168.29.108:3001/get_occupation`).then((response) => {
+    axios.get(`${sessionStorage.getItem("urls")}/get_occupation`).then((response) => {
       setTabler(response.data.map((data,index) =>  <tr>
         <td>{index+1}</td>
         <td>{data.occupation_name}</td>
-        <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`http://192.168.29.108:3001/activate_occupation/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
+        <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_occupation/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
       </tr>))
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   },[])
 
   return(<div className='container text-center'>

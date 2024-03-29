@@ -12,19 +12,21 @@ const AdminIncomeCategories = () => {
   function submitter(e)
   {
     e.preventDefault()
-    axios.post(`http://192.168.29.108:3001/add_income`,{name : e.target.type.value}).then((response) => {
+    axios.post(`${sessionStorage.getItem("urls")}/add_income`,{name : e.target.type.value}).then((response) => {
       toast.success("Success",{position:"top-center"})
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   }
 
   useEffect(() => {
-    axios.get(`http://192.168.29.108:3001/get_income`).then((response) => {
+    axios.get(`${sessionStorage.getItem("urls")}/get_income`).then((response) => {
       setTabler(response.data.map((data,index) =>  <tr>
         <td>{index+1}</td>
         <td>{data.max_income}</td>
-        <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`http://192.168.29.108:3001/activate_income/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
+        <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_income/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
       </tr>))
-    })
+    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+    console.log(err)})
   },[])
 
   return(<div>
