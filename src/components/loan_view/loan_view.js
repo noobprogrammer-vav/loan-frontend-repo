@@ -31,17 +31,17 @@ const LoanView = () => {
   return(<div>
     
     <Header title="Loan View" />
+    <button style={{display:nav_data[1] == "no" ? "none" : "block", float:"right", marginRight:"2%"}} onClick={() => {navigate("/customerform",{state:nav_data})}} className='btn btn-sm btn-primary'>Apply</button>
     <div className='container'>
     <h1 id='name' />
     <h5 id='gist' />
-    <img id='image' src={image} style={{width:"100%"}} />
+    <img id='image' src={image} style={{width:"50%"}} />
     <p id='summary' />
     <p id='description' />
     <div className='container border border-dark'>
       <h1>Terms and Conditions</h1>
       <p id='t_and_c' />
     </div>
-    <button style={{display:nav_data[1] == "no" ? "none" : "block"}} onClick={() => {navigate("/customerform",{state:nav_data})}} className='btn btn-sm btn-primary'>Apply</button>
     </div>
   </div>
 );

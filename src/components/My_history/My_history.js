@@ -13,8 +13,8 @@ const MyHistory = () => {
   const [tabler,setTabler] = useState()
   const [tabler2,setTabler2] = useState()
 
-  const [image,setImage] = useState()
   const [loan_id,setLoan_id] = useState()
+  const [reloader,setReloader] = useState(true)
 
   const navigate = useNavigate()
 
@@ -32,12 +32,14 @@ const MyHistory = () => {
       ratings : e.target.ratings.value
     }
     axios.post(`${sessionStorage.getItem("urls")}/add_feedback`,formData).then((response) => {
-      if(response.data = 1062)
+      console.log(response.data)
+      if(response.data == 1062)
       {
-        toast.warning("you have already added your feedback")
+        toast.warning("you have already added your feedback",{position:"top-center"})
       }
       else{
-        toast.success("Thank you for your feedback")
+        toast.success("Thank you for your feedback",{position:"top-center"})
+        setReloader(!reloader)
       }
       resetbtn.current.click()
     }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
@@ -78,7 +80,7 @@ const MyHistory = () => {
           {/* <td>{data.description}</td> */}
           <td>{data.principle}</td>
           <td>{data.amount}</td>
-          <td style={{color:data.estatus == 0 ? 'red' : 'green'}}>{data.estatus == 0 ? 'Pending' : 'Paid'}</td>
+          <td style={{color:data.estatus == 2 ? 'red' : data.estatus == 1 ? 'green' : 'orange'}}>{data.estatus == 2 ? 'Overdue' : data.estatus == 1 ? 'Paid' : 'Pending'}</td>
           <td>{data.due_date}</td>
         </tr>))
       }
@@ -134,7 +136,7 @@ const MyHistory = () => {
             </div>
             <div className='col-sm-2'>
               <label>Rate your Experience</label>
-              <input required type='number' defaultValue={1} className='form-control rounded rounded-5' name='ratings' />
+              <input max={5} min={0} required type='number' defaultValue={1} className='form-control rounded rounded-5' name='ratings' />
             </div>
           </div>
           <br />
@@ -142,7 +144,7 @@ const MyHistory = () => {
         </form>
       </div>
       <div className='row'>
-      <div className='col-sm-6'>
+      <div className='col-sm-12'>
         <h4 className='text-center'>Upcoming EMI and history</h4>
         <br />
       <table className='table'>
@@ -158,7 +160,7 @@ const MyHistory = () => {
         </tbody>
       </table>
       </div>
-      <div className='col-sm-6 border border-dark rounded'>
+{/*       <div className='col-sm-6 border border-dark rounded'>
         <h4 className='text-center'>Principle payment History</h4>
         <br />
       <table className='table'>
@@ -172,7 +174,7 @@ const MyHistory = () => {
           {tabler2}
         </tbody>
       </table>
-      </div>
+      </div> */}
       </div>
     </div>
 

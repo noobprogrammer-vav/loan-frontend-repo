@@ -88,7 +88,7 @@ const Signup = () => {
                   </div>
                   <div className='col-sm-6'>
                     <label><b>Enter Your Mobile </b></label>
-                    <input onChange={(e) => e.target.value.length > 10 ? document.getElementById("mobile").value = e.target.value.slice(0,10) : ''} required name='mobile' id='mobile' type="number" placeholder='Enter your Mobile...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
+                    <input min={0} onChange={(e) => e.target.value.length > 10 ? document.getElementById("mobile").value = e.target.value.slice(0,10) : ''} required name='mobile' id='mobile' type="number" placeholder='Enter your Mobile...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                   </div>
                   <div className='col-sm-6'>
                     <label><b>Enter Your Email-Id </b></label>
@@ -108,8 +108,8 @@ const Signup = () => {
                     <input required name='password' type="password" placeholder='Password' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                   </div>
                 </div>
-                <p>Already Have an Account? <b onClick={() => navigate("/login")}>Log in</b></p><br></br>
-                <button type='submit' className='btn btn-outline-success rounded rounded-5'>Sign Up</button>
+                <center><button type='submit' className='btn btn-outline-success rounded rounded-5'>Sign Up</button></center><br />
+                <p>Already Have an Account? <b style={{cursor:"pointer"}} onClick={() => navigate("/login")}>Log in</b></p><br></br>
                 </form>
               </div>
           </div>

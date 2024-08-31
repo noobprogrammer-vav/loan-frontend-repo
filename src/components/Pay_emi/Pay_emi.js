@@ -17,7 +17,7 @@ const PayEmi = () => {
     if(sessionStorage.getItem("token") != null)
     {
       axios.post(`${sessionStorage.getItem("urls")}/filter_my_loans`,{token: sessionStorage.getItem("token"), filter : 2}).then((response) => {
-        setApplications(response.data.map((data,index) => <option value={[data.aid,data.loan_id]}>{data.ades}</option>))
+        setApplications(response.data.map((data,index) => <option value={[data.aid,data.loan_id]}>{data.loan_name}</option>))
       }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
       console.log(err)})
     }
@@ -85,15 +85,20 @@ const PayEmi = () => {
   function submitter(e)
   {
     e.preventDefault()
-    axios.get(`${sessionStorage.getItem("urls")}/pay_emi/${e.target.eid.value}`).then((response) => {
-      axios.post(`${sessionStorage.getItem("urls")}/reducer`,{id : e.target.application_id.value.split(",")[0], amount : e.target.amount.value}).then((response) => {
-        toast.success("Amount Paid",{position:"top-center"})
-        window.location.reload(true)
+    if(e.target.eid.value != 'none')
+    {
+      axios.get(`${sessionStorage.getItem("urls")}/pay_emi/${e.target.eid.value}`).then((response) => {
+        axios.post(`${sessionStorage.getItem("urls")}/reducer`,{id : e.target.application_id.value.split(",")[0], amount : e.target.amount.value}).then((response) => {
+          toast.success("Amount Paid",{position:"top-center"})
+          window.location.reload(true)
+        }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+        console.log(err)})
       }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
       console.log(err)})
-    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
-    console.log(err)})
-
+    }
+    else{
+      toast.warning("Select the Date")
+    }
   }
 
   function principlesubmitter(e)

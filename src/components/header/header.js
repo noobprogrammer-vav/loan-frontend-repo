@@ -26,7 +26,7 @@ const Header = () => {
       }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
       console.log(err)})
     }
-  })
+  },[])
 
  return(
 //   <div   >

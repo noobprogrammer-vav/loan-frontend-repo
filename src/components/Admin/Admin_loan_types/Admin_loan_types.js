@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 
 const AdminLoanTypes = () => {
@@ -14,6 +15,7 @@ const AdminLoanTypes = () => {
   const[tabler,setTabler]=useState();
 
   const [reloader,setReloader] = useState(true)
+  const navigate = useNavigate()
 
   const [tc, setTc] = useState()
 
@@ -29,7 +31,7 @@ const AdminLoanTypes = () => {
           <td>{data.gist}</td>
           <td dangerouslySetInnerHTML={{__html : data.summary}}></td>
           <td><img src={`${sessionStorage.getItem("urls")}/uploads/${data.image}`} style={{width:"100%"}} /></td>
-          <td><i className='fa fa-eye btn btn-sm btn-outline-warning' /></td>
+          <td><i onClick={() => {navigate("/admin/loan/view",{state:data.id})}} className='fa fa-eye btn btn-sm btn-outline-warning' /></td>
           <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_loan_types/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
 
         </tr>))
@@ -38,7 +40,7 @@ const AdminLoanTypes = () => {
     console.log(err)})
 
     axios.get(`${sessionStorage.getItem("urls")}/get_tc`).then((response) => {
-      setTc(response.data.map((data,index) => <option value={data.id}>{data.id}</option>))
+      setTc(response.data.map((data,index) => <option value={data.id}>{data.tc_name}</option>))
     }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
     console.log(err)})
 
@@ -47,22 +49,28 @@ const AdminLoanTypes = () => {
   function submitter(e){
 
     e.preventDefault()
-    const formData = new FormData()
-    formData.append("name", e.target.name.value)
-    formData.append("gist", e.target.gist.value)
-    formData.append("rate", e.target.rate.value)
-    formData.append("tc_id", e.target.tc.value)
-    formData.append("summary", summary)
-    formData.append("description", description)
-    formData.append("file", e.target.image.files[0])
-    console.log(e.target.image.files[0])
+    if(summary.length > 10 && description.length > 10)
+    {
+      const formData = new FormData()
+      formData.append("name", e.target.name.value)
+      formData.append("gist", e.target.gist.value)
+      formData.append("rate", e.target.rate.value)
+      formData.append("tc_id", e.target.tc.value)
+      formData.append("summary", summary)
+      formData.append("description", description)
+      formData.append("file", e.target.image.files[0])
+  
+      axios.post(`${sessionStorage.getItem("urls")}/add_loan_types`,formData).then((response) => {
+        setReloader(!reloader)
+        toast.success("Added",{position:"top-center"})
+        resetbtn.current.click()
+      }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+      console.log(err)})
+    }
+    else{
+      toast.warning("All fields are required")
+    }
 
-    axios.post(`${sessionStorage.getItem("urls")}/add_loan_types`,formData).then((response) => {
-      setReloader(!reloader)
-      toast.success("Added",{position:"top-center"})
-      resetbtn.current.click()
-    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
-    console.log(err)})
   }
 
   return(<div className=''>
@@ -71,7 +79,7 @@ const AdminLoanTypes = () => {
       <label>Name</label>
       <input required className='form-control' name='name' placeholder='Enter the Name of Loan'></input><br></br>
       <label>Intereset Rate</label>
-      <input required className='form-control' type='number' name='rate' placeholder='Enter the rate'></input><br></br>
+      <input required step="0.01" className='form-control' type='number' name='rate' placeholder='Enter the rate'></input><br></br>
       <label>Gist</label>
       <input required className='form-control' name='gist' placeholder='Enter the Gist'></input><br></br>
       <label>Terms and Conditions</label>

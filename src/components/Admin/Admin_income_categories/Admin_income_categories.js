@@ -34,7 +34,7 @@ const AdminIncomeCategories = () => {
     <div className='container text-center'>
       <h3>Add Income Categories</h3>
       <form onSubmit={(e)=>submitter(e)}>
-        <input className='form-control' type='number' name='type' />
+        <input min={0} className='form-control' type='number' name='type' />
         <br />
         <button className='btn btn-sm btn-success' type='submit'>Submit</button>
       </form>

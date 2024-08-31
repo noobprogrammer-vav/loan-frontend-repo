@@ -58,3 +58,9 @@ padding: 4%;
 .card{
   background-color: #E6EDEB;
 }
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}

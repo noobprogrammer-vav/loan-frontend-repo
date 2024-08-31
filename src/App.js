@@ -29,6 +29,7 @@ import AdminCustomerView from './components/Admin/Admin_customer_view/Admin_cust
 import AdminCustomerLoans from './components/Admin/Admin_customer_loans/Admin_customer_loans';
 import AdminRatings from './components/Admin/Admin_ratings/Admin_ratings';
 import LoanCalculator from './components/Loan_calculator/Loan_calculator';
+import AdminCustomerLoansView from './components/Admin/Admin_customer_loans_view/Admin_customer_loans_view';
 
 
 function App() {
@@ -49,10 +50,7 @@ function App() {
         <Route path='/admin/customer/view' Component={AdminCustomerView} />
         <Route path='/admin/customer/loans' Component={AdminCustomerLoans} />
         <Route path='/admin/ratings' Component={AdminRatings} />
-
-
-        {/* /admin/customer/loans */}
-
+        <Route path='/admin/loan/view' Component={AdminCustomerLoansView} />
 
         {/* Admin */}
 

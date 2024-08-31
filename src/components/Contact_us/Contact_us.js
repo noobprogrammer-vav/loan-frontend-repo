@@ -45,7 +45,7 @@ const ContactUs = () => {
           <label>Name</label><br></br>
        <input required className='form-control rounded rounded-5' placeholder='Name' name='name'></input><br></br><br></br>
        <label>Mobile</label><br></br>
-       <input required onChange={(e) => e.target.value.length > 10 ? document.getElementById("mobile").value = e.target.value.slice(0,10) : ''} id='mobile' className='form-control rounded rounded-5' placeholder='Mobile' type='number' name='mobile'></input><br></br><br></br>
+       <input min={1} required onChange={(e) => e.target.value.length > 10 ? document.getElementById("mobile").value = e.target.value.slice(0,10) : ''} id='mobile' className='form-control rounded rounded-5' placeholder='Mobile' type='number' name='mobile'></input><br></br><br></br>
        <button className='btn btn-success rounded rounded-5' type='submit'>Send Message</button><button style={{display:"none"}} type="reset" ref={resetbtn} />
 
         </div>

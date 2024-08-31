@@ -70,6 +70,22 @@ const AdminCustomerView = () => {
           <div>
           <div className='row'>
             <div className='col-sm-6'>
+              <label>Name</label>
+              <input defaultValue={data.name} className='form-control rounded rounded-5' readOnly /><br />
+            </div>
+            <div className='col-sm-6'>
+              <label>Email</label>
+              <input defaultValue={data.email} className='form-control rounded rounded-5' readOnly /><br />
+            </div>
+            <div className='col-sm-6'>
+              <label>Mobile</label>
+              <input defaultValue={data.mobile} className='form-control rounded rounded-5' readOnly /><br />
+            </div>
+            <div className='col-sm-6'>
+              <label>Gender</label>
+              <input defaultValue={data.gender} className='form-control rounded rounded-5' readOnly /><br />
+            </div>
+            <div className='col-sm-6'>
               <label>Present Address</label>
               <textarea readOnly required value={data.present_address} className='form-control rounded rounded-5' name='present_address' /><br />
             </div>

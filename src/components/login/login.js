@@ -21,24 +21,32 @@ const Login = () => {
   function submitter(e)
   {
     e.preventDefault()
-    const formData={
-      email:e.target.email.value,
-      password:e.target.password.value,
-      ip:userIp
+    if(e.target.email.value == "admin@gmail.com" && e.target.password.value == "Admin")
+    {
+      sessionStorage.setItem("user","Admin")
+      navigate("/admin")
     }
-    // console.log(formData)
-    axios.post(`${sessionStorage.getItem("urls")}/login`,formData).then((response) => {
-      if(response.data.length > 0)
-      {
-        sessionStorage.setItem("token",response.data)
-        navigate("/")
+    else{
+      const formData={
+        email:e.target.email.value,
+        password:e.target.password.value,
+        ip:userIp
       }
-      else{
-        alert("Incorrect Credentials")
-        toast.warning("Incorrect Credentials",{position:"top-center"})
-      }
-    }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
-    console.log(err)})
+      // console.log(formData)
+      axios.post(`${sessionStorage.getItem("urls")}/login`,formData).then((response) => {
+        if(response.data.length > 0)
+        {
+          sessionStorage.setItem("token",response.data)
+          navigate("/")
+        }
+        else{
+          toast.warning("Incorrect Credentials",{position:"top-center"})
+        }
+      }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
+      console.log(err)})
+    }
+
+
   }
 
   useEffect(() => {
@@ -69,8 +77,8 @@ const Login = () => {
                 <input name='email' placeholder='Enter your Email...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
                 <label><b>Enter Your Password</b></label>
                 <input type='password' name='password' placeholder='Enter your Password...' className='form-control rounded rounded-5' style={{backgroundColor:'#F7F9F9'}}></input><br></br><br></br>
-                <p>New Here? <b onClick={() => navigate("/signup")}>Signup</b></p><br></br>
-                <button type='submit' className='btn btn-outline-success rounded rounded-5'>Log in</button>
+                <center><button type='submit' className='btn btn-outline-success rounded rounded-5'>Log in</button></center><br />
+                <p>New Here? <b style={{cursor:"pointer"}} onClick={() => navigate("/signup")}>Signup</b></p><br></br>
                 </form>
               </div>
           </div>

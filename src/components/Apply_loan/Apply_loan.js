@@ -29,9 +29,9 @@ const ApplyLoan = () => {
         }
         else{
           axios.post(`${sessionStorage.getItem("urls")}/get_specific_customer_info`,{token : sessionStorage.getItem("token")}).then((response) => {
-            console.log(parseFloat(response.data[0].emi_amount))
-            document.getElementById("net").value = parseFloat(response.data[0].income) - parseFloat(response.data[0].emi_amount)
-            document.getElementById("y_int").innerHTML = (parseFloat(response.data[0].income) - parseFloat(response.data[0].emi_amount))/12
+            console.log(parseFloat(response.data[0].emi_amount).toFixed(2))
+            document.getElementById("net").value = (parseFloat(response.data[0].income) - parseFloat(response.data[0].emi_amount)).toFixed(2)
+            document.getElementById("y_int").innerHTML = ((parseFloat(response.data[0].income) - parseFloat(response.data[0].emi_amount))/12).toFixed(2)
 
           }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
           console.log(err)})
@@ -125,9 +125,9 @@ const ApplyLoan = () => {
           <h3>Check </h3>
           <form onSubmit={(e) => checker(e)}>
             <label>Availing Amount</label>
-            <input required type='number' className='form-control rounded rounded-5' name='principle' id='principle' />
+            <input required type='number' min={1} className='form-control rounded rounded-5' name='principle' id='principle' />
             <label>Years</label>
-            <input required type='number' className='form-control rounded rounded-5' name='years' id='years' />
+            <input required type='number' min={1} className='form-control rounded rounded-5' name='years' id='years' />
             <label>Interest Percentage</label>
             <input readOnly type='number' className='form-control rounded rounded-5' name='rate' id='rate' />
             <label>Net Income</label>

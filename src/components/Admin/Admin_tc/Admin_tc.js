@@ -16,7 +16,7 @@ const AdminTc = () => {
 
   function submitter()
   {
-    axios.post(`${sessionStorage.getItem("urls")}/add_tc`,{terms : tc}).then((response) => {
+    axios.post(`${sessionStorage.getItem("urls")}/add_tc`,{terms : tc, name : document.getElementById("name").value}).then((response) => {
       toast.success("Success",{position:"top-center"})
     }).catch((err) => {toast.error("Internal Server error",{position:"top-center"}) 
     console.log(err)})
@@ -26,6 +26,7 @@ const AdminTc = () => {
     axios.get(`${sessionStorage.getItem("urls")}/get_tc`).then((response) => {
       setTabler(response.data.map((data,index) =>  <tr>
         <td>{index+1}</td>
+        <td>{data.tc_name}</td>
         <td dangerouslySetInnerHTML={{__html : data.conditions}} />
         <td><button className={`btn btn-sm btn-${data.status == 1 ? "danger" : "success"}`} onClick={() => axios.get(`${sessionStorage.getItem("urls")}/activate_tc/${data.id}`).then((response) => window.location.reload(true))}>{data.status == 1 ? "Deactivate" : "Activate"}</button></td>
       </tr>))
@@ -33,18 +34,24 @@ const AdminTc = () => {
     console.log(err)})
   },[])
 
-  return(<div className='container text-center'>
+  return(<div className='container'>
     <AdminHeader title="Terms and Conditions" />
     <br />
     <div className='container'>
+      <form onSubmit={submitter}>
+      <label>Condition name</label>
+      <input className='form-control rounded rounded-5' required id='name' name='name' type='text' />
+      <br />
       <ReactQuill theme="snow" onChange={setTc} />
       <br />
-      <button className='btn btn-sm btn-success' onClick={submitter}>Submit</button>
+      <button className='btn btn-sm btn-success' type='submit'>Submit</button>
+      </form>
     </div>
     <br />
     <table className='table'>
       <thead>
         <th>#</th>
+        <th>Name</th>
         <th>Terms and Conditions</th>
         <th>Status</th>
       </thead>

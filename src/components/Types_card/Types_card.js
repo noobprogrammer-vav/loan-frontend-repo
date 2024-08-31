@@ -8,7 +8,7 @@ const TypesCard = (props) => {
 
  return( <div>
     <div className='row cardcontainer'>
-        <div className='typecard rounded rounded-5'>
+        <div style={{width:"100%"}} className='typecard rounded rounded-5'>
          <div className='row ' >
         <div className='col-sm-3'>
         <img src={`${sessionStorage.getItem("urls")}/uploads/${props.image}`} style={{height:'50%',width:'100%'}}/>

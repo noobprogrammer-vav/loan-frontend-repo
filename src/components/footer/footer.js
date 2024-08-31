@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../components/loans_img/logo.png';
@@ -6,6 +6,11 @@ import logo from '../../components/loans_img/logo.png';
 
 
 const Footer = () => {
+
+  useEffect(() => {
+    sessionStorage.setItem("urls","http://192.168.29.108:3001") //http://192.168.29.108:3001  http://localhost:3001
+  },[])
+
   return(<div>
 <footer className="footer">
   <section className="">
